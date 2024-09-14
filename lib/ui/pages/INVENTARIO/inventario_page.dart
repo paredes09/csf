@@ -1,7 +1,6 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_barcode_scanner/enum.dart';
-import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+
 import 'package:get/get.dart';
 import 'package:csf/src/controllers/inventario_controller.dart';
 import 'package:csf/ui/global/buttons/global_button.dart';
@@ -25,7 +24,7 @@ class InventarioPage extends GetView<InventarioController> {
         );
       },
     ).toList();
-    
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Control de Inventario'),
@@ -73,7 +72,7 @@ class InventarioPage extends GetView<InventarioController> {
                           onPressed: () async {
                             await Future.delayed(
                                 const Duration(milliseconds: 1000));
-                            while (true) {
+                            /* while (true) {
                               var resultado = await Get.to(
                                 () => const SimpleBarcodeScannerPage(
                                   appBarTitle: 'Escanear Código',
@@ -104,7 +103,7 @@ class InventarioPage extends GetView<InventarioController> {
                               } else {
                                 break; // Sale del bucle si el usuario cancela o si no se puede leer el código
                               }
-                            }
+                            } */
                           },
                           icon: const Icon(
                             Icons.qr_code_scanner_sharp,

@@ -21,11 +21,11 @@ class DrawerPage extends GetView {
         'name': 'Reparaciones',
         'route': "/reparaciones"
       },
-      /*  {
+      {
         'icon': Icons.note_add_outlined,
         'name': 'Observaciones',
         'route': "/observaciones"
-      }, */
+      },
       {
         'icon': Icons.inventory_2_outlined,
         'name': 'Inventario',
