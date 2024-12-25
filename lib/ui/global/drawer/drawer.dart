@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class DrawerPage extends GetView {
   const DrawerPage({super.key});
@@ -7,49 +8,50 @@ class DrawerPage extends GetView {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> iconName = [
       {
-        'icon': Icons.inventory_outlined,
+        'icon': HugeIcons.strokeRoundedNoteAdd,
         'name': 'Ingreso de Ataudes',
         'route': "/viewRegister"
       },
       {
-        'icon': Icons.folder_open_rounded,
+        'icon': HugeIcons.strokeRoundedTag01,
         'name': 'Salida de Ataudes',
         'route': "/viewSalida"
       },
       {
-        'icon': Icons.report_gmailerrorred_rounded,
+        'icon': HugeIcons.strokeRoundedRepair,
         'name': 'Reparaciones',
         'route': "/reparaciones"
       },
       {
-        'icon': Icons.note_add_outlined,
+        'icon': HugeIcons.strokeRoundedNote,
         'name': 'Observaciones',
         'route': "/observaciones"
       },
       {
-        'icon': Icons.inventory_2_outlined,
+        'icon': HugeIcons.strokeRoundedAnalytics01,
+        'name': 'Generar Reportes',
+        'route': "/reporteInventario"
+      },
+      {
+        'icon': HugeIcons.strokeRoundedCheckList,
         'name': 'Inventario',
         'route': "/inventario"
       },
-      {
-        'icon': Icons.qr_code_2_outlined,
-        'name': 'Generar QRs',
-        'route': "/generarQRs"
-      },
     ];
     return Drawer(
-      backgroundColor: Colors.green.shade900,
+      backgroundColor: Colors.white,
       child: ListView.builder(
         itemCount: iconName.length + 1, // +1 para el DrawerHeader
         itemBuilder: (BuildContext context, int index) {
           if (index == 0) {
             return Container(
               decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 255, 193, 78),
                 border: Border(
                   bottom: BorderSide(color: Colors.white54),
                 ),
               ),
-              height: 130,
+              height: 160,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -62,7 +64,7 @@ class DrawerPage extends GetView {
                           height: 60,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(15),
+                              Radius.circular(30),
                             ),
                             image: DecorationImage(
                               image: AssetImage('assets/logo.png'),
@@ -73,30 +75,44 @@ class DrawerPage extends GetView {
                         const SizedBox(
                           width: 10,
                         ),
-                        const Expanded(
-                          child: ListTile(
-                            title: Text('Bienvenido a CSF',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
+                        const Text('CSF inventory',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900))
                       ],
                     ),
+                    const Divider(
+                      color: Colors.white,
+                    ),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Versión 1.0.0',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12)),
+                        Text('Desarrollado por Aroldo Paredes Piñeiros',
+                            style: TextStyle(color: Colors.white, fontSize: 12))
+                      ],
+                    )
                   ],
                 ),
               ),
             );
           } else {
             final item = iconName[index - 1];
+
             return ListTile(
-              leading: Icon(
-                item['icon'],
-                color: Colors.white,
+              leading: HugeIcon(
+                icon: item['icon'],
+                size: 23.0,
+                color: Colors.black87,
               ),
               title: Text(item['name'],
-                  style: const TextStyle(color: Colors.white)),
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black87)),
               onTap: () {
                 if (item['route'] != null) {
                   Get.offAndToNamed(item['route']);

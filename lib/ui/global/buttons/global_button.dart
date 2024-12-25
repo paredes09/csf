@@ -8,11 +8,11 @@ Widget globalButton(String texto, void Function()? onpress) {
       style: ButtonStyle(
         // Cambia el color de fondo y otros estilos según el estado del botón
         backgroundColor: onpress != null
-            ? WidgetStateProperty.all(Colors.deepPurpleAccent)
+            ? WidgetStateProperty.all(Colors.blue)
             : WidgetStateProperty.all(Colors.grey), // Color desactivado
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(5),
           ),
         ),
       ),

@@ -12,7 +12,6 @@ abstract class Routes {
   static const inventario = '/inventario';
   static const viewPDF = '/viewPDF';
   static const viewStockModelo = '/viewStockModelo';
-  static const generarQRs = '/generarQRs';
   static const pdfViewQr = '/pdfViewQr';
   static const reporteInventario = '/reporteInventario';
 }

@@ -17,6 +17,7 @@ class ViewStockModeloPage extends GetView<SalidaController> {
       return {'modelo': entry.key, 'cantidad': entry.value.length};
     }).toList();
     return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 242, 241, 241),
         appBar: AppBar(title: const Text('Stock Modelos')),
         body: SingleChildScrollView(
           child: Padding(

@@ -2,6 +2,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 
 import 'package:csf/src/controllers/registro_controller.dart';
@@ -87,9 +88,10 @@ class RegistroPage extends GetView<RegistroController> {
         }
       },
       child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 242, 241, 241),
           appBar: AppBar(title: const Text('Registrar Ataud')),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
             child: Form(
               key: formatkey,
               child: Center(
@@ -98,46 +100,49 @@ class RegistroPage extends GetView<RegistroController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             width: 200,
                             child: Obx(() => Text(
-                                'CORRELATIVO Nº${sController.listarAtaudes.last.id.obs + 1}',
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: Get.textTheme.headlineSmall)),
+                                'Registro Nº ${sController.listarAtaudes.last.id.obs + 1}',
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900))),
                           ),
+                          const Spacer(),
                           InkWell(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(5),
                             onTap: () {
                               showDialog(
                                   context: context,
                                   builder: (context) => showDialogFecha(
-                                          'Seleccione la fecha de inicio',
+                                          'Fecha de ingreso',
                                           controller.fechaIngreso.value,
                                           (value) {
                                         controller.setFechaIngreso(value);
                                       }));
                             },
                             child: Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 40,
-                              width: 140,
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                                 border: Border.all(color: Colors.grey),
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.calendar_month_sharp),
+                                  const HugeIcon(
+                                      icon: HugeIcons.strokeRoundedCalendar03,
+                                      color: Colors.black,
+                                      size: 20),
                                   const SizedBox(width: 5),
                                   Obx(() => Text(
                                         DateFormat('dd-MM-yyyy').format(
                                             controller
                                                 .fechaIngreso.obs.value.value),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w700),
                                       )),
                                 ],
                               ),

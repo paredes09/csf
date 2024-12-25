@@ -2,8 +2,8 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:csf/src/controllers/inventario_controller.dart';
-import 'package:csf/ui/global/buttons/global_button.dart';
 import 'package:csf/ui/global/components/drow_text.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class ReporteInventarioPage extends GetView<InventarioController> {
   const ReporteInventarioPage({super.key});
@@ -34,7 +34,7 @@ class ReporteInventarioPage extends GetView<InventarioController> {
     controller.currentRoute = Get.currentRoute;
     // list años del año actual mas 5 años
     final List<DropDownValueModel> dropDownListaAnios = [
-      for (int i = DateTime.now().year; i <= DateTime.now().year + 5; i++)
+      for (int i = 2024; i <= DateTime.now().year + 5; i++)
         DropDownValueModel(value: i, name: i.toString())
     ];
     int anioActual = DateTime.now().year;
@@ -42,33 +42,74 @@ class ReporteInventarioPage extends GetView<InventarioController> {
         dropDownListaAnios.firstWhere((anio) => anio.value == anioActual);
     controller.anioController.dropDownValue = anioInicial;
     return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 242, 241, 241),
         appBar: AppBar(title: const Text('Generar Reporte Inventario')),
         body: SafeArea(
             child: Padding(
           padding: const EdgeInsets.all(28.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/jde-logo.webp', height: 200, width: 200),
-              inputDropDownTextField(null, controller.mesController, (value) {
-                if (value == "") {
-                  controller.mesController.clearDropDown();
-                } else if (value is DropDownValueModel) {
-                  controller.mesController.dropDownValue = value;
-                }
-              }, (p0) => null, dropDownListaMeses, 'Meses', false),
-              const SizedBox(height: 20),
-              inputDropDownTextField(null, controller.anioController, (value) {
-                if (value == "") {
-                  controller.anioController.clearDropDown();
-                } else if (value is DropDownValueModel) {
-                  controller.anioController.dropDownValue = value;
-                }
-              }, (p0) => null, dropDownListaAnios, 'Año', false),
-              const SizedBox(height: 20),
-              globalButton('Generar Reporte', () {
-                controller.hanfleGenerarReporteD();
-              }),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        inputDropDownTextField(null, controller.mesController,
+                            (value) {
+                          if (value == "") {
+                            controller.mesController.clearDropDown();
+                          } else if (value is DropDownValueModel) {
+                            controller.mesController.dropDownValue = value;
+                          }
+                        }, (p0) => null, dropDownListaMeses, 'Mes', false),
+                        const SizedBox(height: 20),
+                        inputDropDownTextField(null, controller.anioController,
+                            (value) {
+                          if (value == "") {
+                            controller.anioController.clearDropDown();
+                          } else if (value is DropDownValueModel) {
+                            controller.anioController.dropDownValue = value;
+                          }
+                        }, (p0) => null, dropDownListaAnios, 'Año', false),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Flexible(
+                      flex: 0,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () {
+                          controller.hanfleGenerarReporteD();
+                        },
+                        child: Ink(
+                          height: double.tryParse('70'),
+                          width: double.tryParse('70'),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const HugeIcon(
+                              icon: HugeIcons.strokeRoundedSearch01,
+                              color: Colors.white),
+                        ),
+                      ))
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Flexible(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.grey,
+                  ),
+                ),
+              )
             ],
           ),
         )));

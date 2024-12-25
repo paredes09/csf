@@ -89,14 +89,10 @@ class SalidaController extends GetxController {
         nombreFallecidoController.clear();
         observacionesController.clear();
         fechaVenta = DateTime.now().obs;
-        Get.snackbar(
-            backgroundColor: Colors.green.shade400,
-            colorText: Colors.white,
-            'Producto Vendido',
-            'Producto registrado como vendido');
+        Get.snackbar('Producto Vendido', 'Producto registrado como vendido');
       } else {
         Get.snackbar(
-            backgroundColor: Colors.red.shade400,
+            backgroundColor: Colors.red.shade200,
             colorText: Colors.white,
             'Error',
             'Error al ingresar la venta, intente nuevamente');

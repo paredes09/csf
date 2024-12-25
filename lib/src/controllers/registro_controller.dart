@@ -178,14 +178,11 @@ class RegistroController extends GetxController {
         await hableObservaciones();
         observController.clear();
         Get.snackbar(
-            'Observación Registrada',
-            backgroundColor: Colors.green.shade400,
-            colorText: Colors.white,
-            'Observación registrada con éxito');
+            'Observación Registrada', 'Observación registrada con éxito');
         isLoading.value = false;
       } else {
         Get.snackbar(
-          backgroundColor: Colors.redAccent.shade400,
+          backgroundColor: Colors.redAccent.shade200,
           colorText: Colors.white,
           'Error al registrar la observación',
           'La observación ya existe',
@@ -210,7 +207,7 @@ class RegistroController extends GetxController {
         isLoading.value = false;
       } else {
         Get.snackbar(
-          backgroundColor: Colors.redAccent.shade400,
+          backgroundColor: Colors.redAccent.shade200,
           colorText: Colors.white,
           'Error al registrar la observación',
           'La observación ya existe',
@@ -258,15 +255,11 @@ class RegistroController extends GetxController {
         altoController.clear();
         fechaIngreso.value = DateTime.now();
         fabricanteController.clearDropDown();
-        Get.snackbar(
-            'Registro Exitoso',
-            backgroundColor: Colors.green.shade400,
-            colorText: Colors.white,
-            'Producto registrado con éxito');
+        Get.snackbar('Registro Exitoso', 'Producto registrado con éxito');
         isLoading.value = false;
       } else {
         Get.snackbar(
-          backgroundColor: Colors.redAccent.shade400,
+          backgroundColor: Colors.redAccent.shade200,
           colorText: Colors.white,
           'Error al registrar el producto',
           'El codigo ${codigoController.text} ya existe',
@@ -324,14 +317,10 @@ class RegistroController extends GetxController {
         estadoController.clearDropDown();
         fechaIngreso.value = DateTime.now();
         fechaVenta.value = DateTime.now();
-        Get.snackbar(
-            'Actualización Exitosa',
-            backgroundColor: Colors.green.shade400,
-            colorText: Colors.white,
-            'Producto actualizado con éxito');
+        Get.snackbar('Actualización Exitosa', 'Producto actualizado con éxito');
       } else {
         Get.snackbar(
-          backgroundColor: Colors.redAccent.shade400,
+          backgroundColor: Colors.redAccent.shade200,
           colorText: Colors.white,
           'Error al registrar el producto',
           'El codigo ya existe',

@@ -1,6 +1,7 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:csf/src/controllers/salida_controller.dart';
 import 'package:csf/ui/global/buttons/global_button.dart';
@@ -32,10 +33,6 @@ class SalidaPage extends GetView<SalidaController> {
         letterSpacing: 1,
         fontSize: 15.5,
         wordSpacing: 2.5);
-    final TextStyle style2 = TextStyle(
-        color: Colors.blueGrey.shade800,
-        fontWeight: FontWeight.bold,
-        fontSize: 12);
 
     return PopScope(
       // ignore: deprecated_member_use
@@ -46,6 +43,7 @@ class SalidaPage extends GetView<SalidaController> {
         }
       },
       child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 242, 241, 241),
           appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -103,190 +101,110 @@ class SalidaPage extends GetView<SalidaController> {
                             controller.isVisible.value = false;
                             return Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 20),
+                                  horizontal: 10, vertical: 5),
                               decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(10)),
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(5)),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Detalles del producto',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blueGrey.shade800,
-                                          letterSpacing: 1.5,
-                                          wordSpacing: 2.5)),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text('Modelo'),
-                                          titleTextStyle: style,
-                                          subtitle: Text(
-                                              registroIndex[0].modeloAtaud),
-                                        ),
+                                  Table(
+                                    columnWidths: const {
+                                      0: FlexColumnWidth(2),
+                                      1: FlexColumnWidth(3),
+                                    },
+                                    border: const TableBorder(
+                                      horizontalInside: BorderSide(
+                                        color: Colors
+                                            .grey, // Color de las líneas entre filas
+                                        width: 1, // Ancho de las líneas
                                       ),
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text('Fabricante'),
-                                          titleTextStyle: style,
-                                          subtitle: Text(
-                                              registroIndex[0].fabricanteAtaud),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
+                                    ),
                                     children: [
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text('Tamaño'),
-                                          titleTextStyle: style,
-                                          subtitle: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'Largo: ${registroIndex[0].largoAtaud.toString()} MT',
-                                                  style: style2,
-                                                ),
-                                                Text(
-                                                  'Ancho: ${registroIndex[0].anchoAtaud.toString()} CM',
-                                                  style: style2,
-                                                ),
-                                                Text(
-                                                  'Alto: ${registroIndex[0].altoAtaud.toString()} CM',
-                                                  style: style2,
-                                                ),
-                                              ]),
-                                        ),
+                                      filasColumnas('Modelo',
+                                          registroIndex[0].modeloAtaud),
+                                      filasColumnas('Fabricante',
+                                          registroIndex[0].fabricanteAtaud),
+                                      filasColumnas(
+                                          'Tipo', registroIndex[0].tipoAtaud),
+                                      filasColumnas(
+                                          'Color', registroIndex[0].colorAtaud),
+                                      filasColumnas('Precio compra',
+                                          'S/. ${registroIndex[0].precioCompraAtaud.toString()}0'),
+                                      filasColumnas('Precio venta',
+                                          'S/. ${registroIndex[0].precioVentaAtaud.toString()}0'),
+                                      filasColumnas('Tamaño',
+                                          registroIndex[0].tamanoAtaud),
+                                      filasColumnas('Dimesiones',
+                                          '${registroIndex[0].largoAtaud} | ${registroIndex[0].altoAtaud} | ${registroIndex[0].anchoAtaud}'),
+                                      filasColumnas(
+                                        'Fecha de compra',
+                                        DateFormat('dd-MM-yyyy').format(
+                                            controller.fechaIngreso.obs.value
+                                                    .value =
+                                                registroIndex[0].fechaIngreso),
                                       ),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text('Tipo'),
-                                          titleTextStyle: style,
-                                          subtitle:
-                                              Text(registroIndex[0].tipoAtaud),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text('Color'),
-                                          titleTextStyle: style,
-                                          subtitle:
-                                              Text(registroIndex[0].colorAtaud),
-                                        ),
-                                      )
-                                    ],
+                                  const Divider(
+                                    color: Colors.grey,
                                   ),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text(
-                                            'Precio de compra',
+                                      Text(
+                                        'Fecha Venta',
+                                        style: style,
+                                      ),
+                                      const SizedBox(
+                                        width: 37,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  showDialogFecha(
+                                                      'Fecha Venta',
+                                                      controller.fechaVenta
+                                                          .value, (value) {
+                                                    controller
+                                                        .setFechaVenta(value);
+                                                  }));
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colors.transparent),
                                           ),
-                                          titleTextStyle: style,
-                                          subtitle: Text(registroIndex[0]
-                                              .precioCompraAtaud
-                                              .toString()),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text('Precio de venta'),
-                                          titleTextStyle: style,
-                                          subtitle: Text(registroIndex[0]
-                                              .precioVentaAtaud
-                                              .toString()),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ListTile(
-                                          title: const Text(
-                                            'Fecha de ingreso',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          titleTextStyle: style,
-                                          subtitle: Text(
-                                            DateFormat('dd-MM-yyyy').format(
-                                                controller.fechaIngreso.obs
-                                                        .value.value =
-                                                    registroIndex[0]
-                                                        .fechaIngreso),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          onTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    showDialogFecha(
-                                                        'Fecha Venta',
-                                                        controller.fechaVenta
-                                                            .value, (value) {
-                                                      controller
-                                                          .setFechaVenta(value);
-                                                    }));
-                                          },
-                                          child: Column(
+                                          child: Row(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                CrossAxisAlignment.center,
                                             children: [
-                                              Text(
-                                                'Fecha Venta',
-                                                style: style,
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                height: 40,
-                                                width: 140,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  border: Border.all(
-                                                      color: Colors.grey),
-                                                ),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    const Icon(Icons
-                                                        .calendar_month_sharp),
-                                                    const SizedBox(width: 5),
-                                                    Obx(() => Text(
-                                                          DateFormat(
-                                                                  'dd-MM-yyyy')
-                                                              .format(controller
-                                                                  .fechaVenta
-                                                                  .value),
-                                                        )),
-                                                  ],
-                                                ),
-                                              ),
+                                              const HugeIcon(
+                                                  icon: HugeIcons
+                                                      .strokeRoundedCalendar03,
+                                                  color: Colors.black54),
+                                              const SizedBox(width: 5),
+                                              Obx(() => Text(
+                                                    style: const TextStyle(
+                                                        color: Colors.black54),
+                                                    DateFormat('dd-MM-yyyy')
+                                                        .format(controller
+                                                            .fechaVenta.value),
+                                                  )),
                                             ],
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(
-                                    height: 20,
+                                    height: 10,
                                   ),
                                   inputText(
                                       1,
@@ -297,10 +215,10 @@ class SalidaPage extends GetView<SalidaController> {
                                       controller.nombreFallecidoController,
                                       controller.validador),
                                   const SizedBox(
-                                    height: 20,
+                                    height: 10,
                                   ),
                                   inputText(
-                                      3,
+                                      2,
                                       false,
                                       'Observaciones',
                                       TextInputType.text,
@@ -308,19 +226,22 @@ class SalidaPage extends GetView<SalidaController> {
                                       controller.observacionesController,
                                       (p0) => null),
                                   const SizedBox(
-                                    height: 20,
+                                    height: 10,
                                   ),
                                   Obx(() => controller.isLoading.value
                                       ? const Center(
                                           child: CircularProgressIndicator(),
                                         )
-                                      : globalButton('Registrar Salida', () {
+                                      : globalButton('Registrar', () {
                                           if (formatkey.currentState!
                                               .validate()) {
                                             controller
                                                 .handleRegistrarSalidaAtaud();
                                           }
-                                        }))
+                                        })),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
                                 ],
                               ),
                             );
@@ -337,4 +258,37 @@ class SalidaPage extends GetView<SalidaController> {
           )),
     );
   }
+}
+
+TableRow filasColumnas(String titulo, String detalle) {
+  return TableRow(
+    children: [
+      TableCell(
+        verticalAlignment: TableCellVerticalAlignment.middle,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            titulo,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ),
+      TableCell(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            detalle,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }

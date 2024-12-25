@@ -1,6 +1,7 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:csf/src/controllers/registro_controller.dart';
 import 'package:csf/ui/global/buttons/global_button.dart';
@@ -100,9 +101,10 @@ class RegistroUpddatePage extends GetView<RegistroController> {
         controller.colorController.clearDropDown();
       },
       child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 242, 241, 241),
           appBar: AppBar(title: const Text('Actualizar Registro')),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             child: Form(
               key: formatkey,
               child: Center(
@@ -111,10 +113,9 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          'CORRELATIVO Nº${codigo.substring(0, 4).replaceAll(RegExp(r'\D'), '')}',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: Get.textTheme.headlineSmall),
+                          'Registro Nº ${codigo.substring(0, 4).replaceAll(RegExp(r'\D'), '')}',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w900)),
                       const SizedBox(height: 20),
                       inputDropDownTextField(null, controller.modeloController,
                           (value) {
@@ -270,52 +271,58 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Row(
                         children: [
                           Expanded(
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(15),
-                              onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => showDialogFecha(
-                                            'Fecha Compra',
-                                            controller.fechaIngreso.value,
-                                            (value) {
-                                          controller.setFechaIngreso(value);
-                                        }));
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Fecha Compra',
-                                    style: style,
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Fecha Compra',
+                                  style: style,
+                                ),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(5),
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => showDialogFecha(
+                                                'Fecha Compra',
+                                                controller.fechaIngreso.value,
+                                                (value) {
+                                              controller.setFechaIngreso(value);
+                                            }));
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
                                     height: 40,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(5),
                                       border: Border.all(color: Colors.grey),
                                     ),
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        const Icon(Icons.calendar_month_sharp),
+                                        const HugeIcon(
+                                            icon: HugeIcons
+                                                .strokeRoundedCalendar03,
+                                            color: Colors.black,
+                                            size: 20),
                                         const SizedBox(width: 5),
                                         Obx(() => Text(
                                               DateFormat('dd-MM-yyyy').format(
                                                   controller.fechaIngreso.obs
                                                       .value.value),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w700),
                                             )),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                           Obx(() => controller.isVisible.value
@@ -323,32 +330,34 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                               : const SizedBox()),
                           Obx(() => controller.isVisible.value
                               ? Expanded(
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(15),
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => showDialogFecha(
-                                                  'Fecha Venta',
-                                                  controller.fechaVenta.value,
-                                                  (value) {
-                                                controller.setFechaVenta(value);
-                                              }));
-                                    },
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Fecha Venta',
-                                          style: style,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Fecha Venta',
+                                        style: style,
+                                      ),
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(15),
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  showDialogFecha(
+                                                      'Fecha Venta',
+                                                      controller.fechaVenta
+                                                          .value, (value) {
+                                                    controller
+                                                        .setFechaVenta(value);
+                                                  }));
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
                                           height: 40,
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(5),
                                             border:
                                                 Border.all(color: Colors.grey),
                                           ),
@@ -356,8 +365,11 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              const Icon(
-                                                  Icons.calendar_month_sharp),
+                                              const HugeIcon(
+                                                  icon: HugeIcons
+                                                      .strokeRoundedCalendar03,
+                                                  color: Colors.black,
+                                                  size: 20),
                                               const SizedBox(width: 5),
                                               Obx(() => Text(
                                                     DateFormat('dd-MM-yyyy')
@@ -366,12 +378,15 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                                                             .obs
                                                             .value
                                                             .value),
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700),
                                                   )),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 )
                               : const SizedBox())
@@ -407,10 +422,12 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                                 ],
                           'Estado',
                           false),
-                      const SizedBox(height: 20),
                       Obx(() => controller.isVisible.value
                           ? Column(
                               children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
                                 inputText(
                                     1,
                                     false,
@@ -431,9 +448,11 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                               ],
                             )
                           : const SizedBox()),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Obx(() => controller.isLoading.value
-                          ? const Center(child: CircularProgressIndicator())
+                          ? const Center(child: CircularProgressIndicator(
+                            
+                          ))
                           : globalButton('Actualizar Registro', () {
                               if (formatkey.currentState!.validate()) {
                                 showLogoutConfirmationDialog(context, () {
@@ -456,27 +475,27 @@ class RegistroUpddatePage extends GetView<RegistroController> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          elevation: 10,
+          shape:
+              ContinuousRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          backgroundColor: Colors.white,
           title: const Row(
             children: [
-              Icon(
-                Icons.password_rounded,
+              HugeIcon(
+                icon: HugeIcons.strokeRoundedPasswordValidation,
+                color: Colors.black,
+                size: 24.0,
               ),
               SizedBox(
                 width: 10,
               ),
               Text(
-                "Codigo de Acceso",
+                "Validar cambios",
               ),
             ],
           ),
-          content: inputText(
-              1,
-              false,
-              'Codigo ',
-              TextInputType.visiblePassword,
-              const Icon(Icons.password),
-              controller.accesoController,
-              controller.validarCodigo),
+          content: inputText(1, false, 'Codigo', TextInputType.visiblePassword,
+              null, controller.accesoController, controller.validarCodigo),
           actions: [
             TextButton(
               child: const Text(
@@ -488,27 +507,22 @@ class RegistroUpddatePage extends GetView<RegistroController> {
                 controller.accesoController.clear();
               },
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: TextButton(
-                child: const Text("Confirmar",
-                    style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  if (controller.listarCodigoAcceso[0].codigo ==
-                      controller.accesoController.text) {
-                    logoutFunction();
-                    Get.back();
-                    controller.accesoController.clear();
-                  } else {
-                    Get.back();
-                    controller.accesoController.clear();
-                    Get.snackbar('Error', 'Codigo de Acceso Incorrecto');
-                  }
-                },
-              ),
+            SizedBox(
+              width: 130,
+              height: 40,
+              child: globalButton('Confirmar', () {
+                if (controller.listarCodigoAcceso[0].codigo ==
+                    controller.accesoController.text) {
+                  logoutFunction();
+                  Get.back();
+                  controller.accesoController.clear();
+                } else {
+                  Get.back();
+                  controller.accesoController.clear();
+                  Get.snackbar(
+                      'Acceso denegado', 'Codigo de Acceso Incorrecto');
+                }
+              }),
             )
           ],
         );

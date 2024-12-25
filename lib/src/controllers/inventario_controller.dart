@@ -59,7 +59,7 @@ class InventarioController extends GetxController {
       if (control != null) {
         if (codigoExiste) {
           Get.snackbar(
-              backgroundColor: Colors.redAccent.shade400,
+              backgroundColor: Colors.redAccent.shade200,
               colorText: Colors.white,
               'Error',
               'El codigo ingresado ya se encuentra registrado para el inventario');
@@ -79,7 +79,7 @@ class InventarioController extends GetxController {
       guardarInventarioEnCache();
     } else {
       Get.snackbar(
-          backgroundColor: Colors.redAccent.shade400,
+          backgroundColor: Colors.redAccent.shade200,
           colorText: Colors.white,
           'Error',
           'El código ingresado no existe en el inventario');
@@ -168,68 +168,93 @@ class InventarioController extends GetxController {
     final ttf = pw.Font.ttf(fontData);
     final img = await rootBundle.load('assets/jde-logo.webp');
     final imageBytes = img.buffer.asUint8List();
-    pdf.addPage(pw.Page(
-      build: (pw.Context context) {
-        return pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Header(
-                level: 0,
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Control de Inventario',
-                        style: pw.TextStyle(
+
+    // Divide la lista en bloques de tamaño fijo, como 40 registros por bloque.
+    const registrosPorPagina = 20;
+    List<List<String>> registrosDivididos = [];
+    for (var i = 0; i < generarReporte.length; i += registrosPorPagina) {
+      registrosDivididos.add(
+        generarReporte
+            .skip(i)
+            .take(registrosPorPagina)
+            .map((codigo) => codigo.codigoAtaud)
+            .toList(),
+      );
+    }
+
+    // Crear una página para cada bloque
+    for (var i = 0; i < registrosDivididos.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          build: (pw.Context context) {
+            return [
+              pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 0,
+                    child: pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text(
+                          'Control de Inventario',
+                          style: pw.TextStyle(
                             font: ttf,
                             fontSize: 24,
-                            fontWeight: pw.FontWeight.bold)),
-                    pw.Container(
-                      alignment: pw.Alignment.center,
-                      height: 50,
-                      child: pw.Image(pw.MemoryImage(imageBytes)),
-                    )
-                  ],
-                )),
-            pw.Paragraph(
-              text:
-                  'Responsable: ${generarReporte[0].nombreResponsable.toUpperCase()}',
-              style: pw.TextStyle(font: ttf, fontSize: 18),
-            ),
-            pw.Paragraph(
-              text:
-                  'Fecha: ${DateFormat('dd/MM/yyyy - HH:MM').format(generarReporte[0].fechaRegistro)}',
-              style: pw.TextStyle(font: ttf, fontSize: 18),
-            ),
-            pw.TableHelper.fromTextArray(
-              cellAlignments: {
-                0: pw.Alignment.topLeft,
-              },
-              context: context,
-              data: <List<String>>[
-                <String>['Codigo de Ataudes Registrados'],
-                ...generarReporte.map((codigo) => [codigo.codigoAtaud]),
-              ],
-              border: pw.TableBorder.all(),
-              headerStyle: pw.TextStyle(
-                font: ttf,
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.Container(
+                          alignment: pw.Alignment.center,
+                          height: 50,
+                          child: pw.Image(pw.MemoryImage(imageBytes)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.Paragraph(
+                    text:
+                        'Responsable: ${generarReporte[0].nombreResponsable.toUpperCase()}',
+                    style: pw.TextStyle(font: ttf, fontSize: 18),
+                  ),
+                  pw.Paragraph(
+                    text:
+                        'Fecha: ${DateFormat('dd/MM/yyyy - HH:mm').format(generarReporte[0].fechaRegistro)}',
+                    style: pw.TextStyle(font: ttf, fontSize: 18),
+                  ),
+                  // ignore: deprecated_member_use
+                  pw.Table.fromTextArray(
+                    headers: <String>['Código de Ataúdes Registrados'],
+                    data: registrosDivididos[i]
+                        .map((codigo) => [codigo])
+                        .toList(),
+                    border: pw.TableBorder.all(),
+                    headerStyle: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 16,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                    cellStyle: pw.TextStyle(font: ttf, fontSize: 12),
+                    cellAlignments: {
+                      0: pw.Alignment.topLeft,
+                    },
+                  ),
+                  pw.Paragraph(
+                    text:
+                        'Ataúdes contabilizados el mes de ${mesController.dropDownValue!.name} : ${generarReporte.length}',
+                    style: pw.TextStyle(font: ttf, fontSize: 16),
+                  ),
+                ],
               ),
-              cellStyle: pw.TextStyle(font: ttf, fontSize: 12),
-            ),
-            pw.Paragraph(
-              text:
-                  'Ataúdes contablizados el mes de ${mesController.dropDownValue!.name} : ${generarReporte.length}',
-              style: pw.TextStyle(font: ttf, fontSize: 16),
-            ),
-          ],
-        );
-      },
-    ));
+            ];
+          },
+        ),
+      );
+    }
+
     final outputFile = await _getOutputFile();
     await outputFile.writeAsBytes(await pdf.save());
     pdfPath.value = outputFile.path;
-    // Devuelve los bytes del PDF para la previsualización.
     return pdf.save();
   }
 
@@ -239,76 +264,101 @@ class InventarioController extends GetxController {
     final ttf = pw.Font.ttf(fontData);
     final img = await rootBundle.load('assets/jde-logo.webp');
     final imageBytes = img.buffer.asUint8List();
+
+    // Filtra los ataúdes en stock y crea la lista ataudesStock
     var ataudesStock = salidaConrtoller.listarAtaudes
         .where((element) => element.estadoAtaud == 1)
-        .map(
-      (element) {
-        return DropDownValueModel(
-          value: element.id,
-          name: element.codigoAtaud,
-        );
-      },
-    ).toList();
-    pdf.addPage(pw.Page(
-      build: (pw.Context context) {
-        return pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Header(
-                level: 0,
-                child: pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Control de Inventario',
+        .map((element) {
+      return DropDownValueModel(
+        value: element.id,
+        name: element.codigoAtaud,
+      );
+    }).toList();
+
+    // Tamaño de registros por página
+    const registrosPorPagina = 20;
+
+    // Divide los códigos de ataúdes en bloques de 20
+    List<List<String>> registrosDivididos = [];
+    for (var i = 0;
+        i < controlInventario[0].codigos.length;
+        i += registrosPorPagina) {
+      registrosDivididos.add(
+        controlInventario[0]
+            .codigos
+            .skip(i)
+            .take(registrosPorPagina)
+            .map((codigo) => codigo.codigoAtaud)
+            .toList(),
+      );
+    }
+
+    // Crear una página para cada bloque de registros
+    for (var i = 0; i < registrosDivididos.length; i++) {
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Header(
+                  level: 0,
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text(
+                        'Control de Inventario',
                         style: pw.TextStyle(
-                            font: ttf,
-                            fontSize: 24,
-                            fontWeight: pw.FontWeight.bold)),
-                    pw.Container(
-                      alignment: pw.Alignment.center,
-                      height: 50,
-                      child: pw.Image(pw.MemoryImage(imageBytes)),
-                    )
-                  ],
-                )),
-            pw.Paragraph(
-              text:
-                  'Responsable: ${controlInventario[0].nombreResponsable.toUpperCase()}',
-              style: pw.TextStyle(font: ttf, fontSize: 18),
-            ),
-            pw.Paragraph(
-              text:
-                  'Fecha: ${DateFormat('dd/MM/yyyy - HH:MM').format(DateTime.now())}',
-              style: pw.TextStyle(font: ttf, fontSize: 18),
-            ),
-            pw.TableHelper.fromTextArray(
-              cellAlignments: {
-                0: pw.Alignment.topLeft,
-              },
-              context: context,
-              data: <List<String>>[
-                <String>['Codigo de Ataudes Registrados'],
-                ...controlInventario[0]
-                    .codigos
-                    .map((codigo) => [codigo.codigoAtaud]),
+                          font: ttf,
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.Container(
+                        alignment: pw.Alignment.center,
+                        height: 50,
+                        child: pw.Image(pw.MemoryImage(imageBytes)),
+                      ),
+                    ],
+                  ),
+                ),
+                pw.Paragraph(
+                  text:
+                      'Responsable: ${controlInventario[0].nombreResponsable.toUpperCase()}',
+                  style: pw.TextStyle(font: ttf, fontSize: 18),
+                ),
+                pw.Paragraph(
+                  text:
+                      'Fecha: ${DateFormat('dd/MM/yyyy - HH:mm').format(DateTime.now())}',
+                  style: pw.TextStyle(font: ttf, fontSize: 18),
+                ),
+                // ignore: deprecated_member_use
+                pw.Table.fromTextArray(
+                  headers: <String>['Código de Ataúdes Registrados'],
+                  data:
+                      registrosDivididos[i].map((codigo) => [codigo]).toList(),
+                  border: pw.TableBorder.all(),
+                  headerStyle: pw.TextStyle(
+                    font: ttf,
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                  cellStyle: pw.TextStyle(font: ttf, fontSize: 12),
+                  cellAlignments: {
+                    0: pw.Alignment.topLeft,
+                  },
+                ),
+                pw.Paragraph(
+                  text:
+                      'Ataúdes contabilizados: ${controlInventario[0].codigos.length} de ${ataudesStock.length}',
+                  style: pw.TextStyle(font: ttf, fontSize: 16),
+                ),
               ],
-              border: pw.TableBorder.all(),
-              headerStyle: pw.TextStyle(
-                font: ttf,
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-              ),
-              cellStyle: pw.TextStyle(font: ttf, fontSize: 12),
-            ),
-            pw.Paragraph(
-              text:
-                  'Ataúdes contablizados: ${controlInventario[0].codigos.length} de ${ataudesStock.length}',
-              style: pw.TextStyle(font: ttf, fontSize: 16),
-            ),
-          ],
-        );
-      },
-    ));
+            );
+          },
+        ),
+      );
+    }
 
     // Guarda el PDF en el dispositivo (si es necesario)
     final outputFile = await _getOutputFile();

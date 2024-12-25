@@ -25,10 +25,27 @@ TextFormField inputText(
       prefixIconConstraints: const BoxConstraints(maxWidth: 40, minWidth: 40),
       prefixIcon: prefixIcon,
       labelText: label,
+      labelStyle: const TextStyle(color: Colors.grey),
       alignLabelWithHint: true,
+      floatingLabelStyle:
+          WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
+        final color =
+            states.contains(WidgetState.focused) ? Colors.blue : Colors.grey;
+        return TextStyle(color: color);
+      }),
       contentPadding: const EdgeInsets.fromLTRB(10, 0, 20, 20),
-      border: const OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.blue)),
+      errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.red)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
   );

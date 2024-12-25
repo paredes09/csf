@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:csf/src/controllers/registro_controller.dart';
 import 'package:csf/src/controllers/salida_controller.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 final SalidaController controllerAtaudes = Get.put(SalidaController());
 
@@ -21,9 +22,10 @@ class ViewRegistrosPage extends GetView<RegistroController> {
         }
       },
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 242, 241, 241),
         appBar: AppBar(
           title: const Text(
-            'Stock de Ataudes',
+            'Stock',
           ),
         ),
         body: Obx(() {
@@ -35,15 +37,24 @@ class ViewRegistrosPage extends GetView<RegistroController> {
               children: [
                 SizedBox(
                   child: TextField(
+                      cursorColor: Colors.grey.shade500,
                       onChanged: (value) {
                         controllerAtaudes.searchQuery.value = value;
                       },
                       decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(5),
-                          hintText: 'Buscar',
-                          prefixIcon: const Icon(Icons.search),
+                          hintText: 'Busque por código o modelo del ataúd',
+                          hintStyle: TextStyle(
+                              fontSize: 12, color: Colors.grey.shade600),
+                          prefixIcon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedSearch02,
+                              color: Colors.grey.shade600,
+                              size: 20.0),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.blue)),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(10),
                           ))),
                 ),
                 const SizedBox(height: 20),
@@ -52,11 +63,30 @@ class ViewRegistrosPage extends GetView<RegistroController> {
                     itemCount: listaRegistrados.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
+                        shape: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 0.5,
+                        ),
+                        color: Colors.white,
                         child: ListTile(
-                          title: Text(listaRegistrados[index].codigoAtaud),
+                          title: Text(
+                            listaRegistrados[index].codigoAtaud,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13),
+                          ),
                           subtitle: Text(
-                              '${listaRegistrados[index].modeloAtaud} - ${listaRegistrados[index].colorAtaud}'),
-                          trailing: const Icon(Icons.edit),
+                            '${listaRegistrados[index].modeloAtaud} - ${listaRegistrados[index].colorAtaud}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                            ),
+                          ),
+                          trailing: const HugeIcon(
+                              icon: HugeIcons.strokeRoundedEdit01,
+                              color: Colors.black),
                           onTap: () {
                             controller.setId(listaRegistrados[index].id);
                           },
@@ -70,14 +100,14 @@ class ViewRegistrosPage extends GetView<RegistroController> {
           );
         }),
         floatingActionButton: FloatingActionButton.small(
-          onPressed: () {
-            Get.toNamed('/register');
-          },
-          child: const Icon(
-            Icons.library_add_outlined,
-            color: Colors.white,
-          ),
-        ),
+            onPressed: () {
+              Get.toNamed('/register');
+            },
+            child: const HugeIcon(
+              icon: HugeIcons.strokeRoundedAdd02,
+              color: Colors.white,
+              size: 24.0,
+            )),
       ),
     );
   }

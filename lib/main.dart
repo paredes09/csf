@@ -30,18 +30,21 @@ void main() async {
       getPages: AppPages.pages,
       defaultTransition: Transition.native,
       theme: ThemeData(
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Colors.green.shade900, elevation: 10),
-        appBarTheme: AppBarTheme(
-          iconTheme: const IconThemeData(
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color.fromARGB(255, 255, 193, 78),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Color.fromARGB(255, 255, 193, 78), elevation: 10),
+        appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(
             color: Colors.white,
           ),
-          titleTextStyle: const TextStyle(
+          titleTextStyle: TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
-          backgroundColor: Colors.green.shade900,
+          backgroundColor: Color.fromARGB(255, 255, 193, 78),
         ),
       )));
 }

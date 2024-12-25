@@ -11,6 +11,7 @@ class PdfPage extends GetView<InventarioController> {
     Get.lazyPut(() => InventarioController());
     final String? previus = Get.arguments;
     return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 242, 241, 241),
         appBar: AppBar(title: const Text('Control Inventario')),
         body: PdfPreview(build: (format) {
           // Condición para verificar la ruta y decidir qué función usar

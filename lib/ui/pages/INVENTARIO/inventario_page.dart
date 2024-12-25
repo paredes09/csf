@@ -6,6 +6,7 @@ import 'package:csf/src/controllers/inventario_controller.dart';
 import 'package:csf/ui/global/buttons/global_button.dart';
 import 'package:csf/ui/global/components/drow_text.dart';
 import 'package:csf/ui/global/components/input_text.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class InventarioPage extends GetView<InventarioController> {
   InventarioPage({super.key});
@@ -26,16 +27,9 @@ class InventarioPage extends GetView<InventarioController> {
     ).toList();
 
     return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 242, 241, 241),
         appBar: AppBar(
-          title: const Text('Control de Inventario'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.dashboard_customize),
-              onPressed: () {
-                Get.toNamed('/reporteInventario');
-              },
-            )
-          ],
+          title: const Text('Inventario'),
         ),
         body: Obx(() => controller.isLoading.value
             ? const Center(
@@ -65,51 +59,6 @@ class InventarioPage extends GetView<InventarioController> {
                               true),
                         ),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      IconButton(
-                          onPressed: () async {
-                            await Future.delayed(
-                                const Duration(milliseconds: 1000));
-                            /* while (true) {
-                              var resultado = await Get.to(
-                                () => const SimpleBarcodeScannerPage(
-                                  appBarTitle: 'Escanear Código',
-                                  scanType: ScanType.qr,
-                                  isShowFlashIcon: true,
-                                  cancelButtonText: 'Cancelar',
-                                ),
-                              );
-                              if (resultado is String) {
-                                if (resultado != "-1") {
-                                  var codigoExistente = controller
-                                      .salidaConrtoller.listaFiltrada
-                                      .firstWhereOrNull((element) =>
-                                          element.codigoAtaud == resultado);
-                                  if (codigoExistente == null) {
-                                    Get.snackbar('Error',
-                                        'El código no existe en la base de datos',
-                                        backgroundColor: Colors.red,
-                                        colorText: Colors.white);
-                                    break;
-                                  } else {
-                                    controller.agregarCodigoAtaud(
-                                        resultado.toString());
-                                  }
-                                } else {
-                                  break;
-                                }
-                              } else {
-                                break; // Sale del bucle si el usuario cancela o si no se puede leer el código
-                              }
-                            } */
-                          },
-                          icon: const Icon(
-                            Icons.qr_code_scanner_sharp,
-                            color: Colors.green,
-                            size: 40,
-                          ))
                     ],
                   ),
                   const SizedBox(
@@ -134,14 +83,23 @@ class InventarioPage extends GetView<InventarioController> {
                               (a, b) => b.codigoAtaud.compareTo(a.codigoAtaud));
 
                           var codigo = codigoOrdenado[index];
-
                           return Card(
+                            shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            color: Colors.white,
                             child: ListTile(
-                                contentPadding: const EdgeInsets.all(5),
-                                title: Text(codigo.codigoAtaud),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 7),
+                                title: Text(
+                                  codigo.codigoAtaud,
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700),
+                                ),
                                 trailing: IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Color(0xFFE57373)),
+                                  icon: const HugeIcon(
+                                      icon: HugeIcons.strokeRoundedDelete02,
+                                      color: Colors.red),
                                   onPressed: () {
                                     controller.controlInventario.first.codigos
                                         .removeAt(index);

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:csf/src/controllers/registro_controller.dart';
 import 'package:csf/ui/global/buttons/global_button.dart';
 import 'package:csf/ui/global/components/input_text.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 bool ind = false;
 
@@ -14,35 +15,46 @@ class ViewObservacionesPage extends GetView<RegistroController> {
     final key = GlobalKey<FormState>();
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 242, 241, 241),
       appBar: AppBar(
         title: const Text('Observaciones'),
         actions: [
           IconButton(
               onPressed: () {
                 showModalBottomSheet<void>(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
                     context: context,
                     builder: (BuildContext context) {
                       return SingleChildScrollView(
                           child: AnimatedPadding(
-                              duration: const Duration(milliseconds: 150),
+                              duration: const Duration(milliseconds: 200),
                               padding: EdgeInsets.only(
                                   bottom:
                                       MediaQuery.of(context).viewInsets.bottom),
                               child: Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
                                 child: Form(
                                   key: key,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const ListTile(
-                                        title: Text(
-                                          'Nueva Observación',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                      const Text(
+                                        'Nueva Observación',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
                                       ),
                                       inputText(
                                           3,
@@ -74,7 +86,9 @@ class ViewObservacionesPage extends GetView<RegistroController> {
                               )));
                     });
               },
-              icon: const Icon(Icons.add_circle_outlined))
+              icon: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedAddCircleHalfDot,
+                  color: Colors.white))
         ],
       ),
       body: Obx(() => controller.isLoading.value
@@ -87,8 +101,14 @@ class ViewObservacionesPage extends GetView<RegistroController> {
                 return Column(
                   children: [
                     ListTile(
-                      title: Text(observacion.detalles),
+                      title: Text(
+                        observacion.detalles,
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                        ),
+                      ),
                       trailing: Obx(() => Checkbox(
+                          activeColor: Colors.blue,
                           value: observacion.estado.obs.value,
                           onChanged: (bool? value) {
                             controller.handleActualizarObservacion(
@@ -99,33 +119,43 @@ class ViewObservacionesPage extends GetView<RegistroController> {
                       onTap: () {
                         controller.observController.text = observacion.detalles;
                         showModalBottomSheet<void>(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(10),
+                              ),
+                            ),
+                            backgroundColor: Colors.white,
                             context: context,
                             builder: (BuildContext context) {
                               return SingleChildScrollView(
                                   child: AnimatedPadding(
                                       duration:
-                                          const Duration(milliseconds: 150),
+                                          const Duration(milliseconds: 200),
                                       padding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
                                               .bottom),
                                       child: Container(
                                         width: double.infinity,
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
                                         child: Form(
                                           key: key,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              const ListTile(
-                                                title: Text(
-                                                  'Editar Observación',
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
+                                              const Text(
+                                                'Editar Observación',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const SizedBox(
+                                                height: 15,
                                               ),
                                               PopScope(
                                                 // ignore: deprecated_member_use
@@ -176,7 +206,11 @@ class ViewObservacionesPage extends GetView<RegistroController> {
                             });
                       },
                     ),
-                    const Divider()
+                    const Divider(
+                      thickness: 1.5,
+                      height: 5,
+                      color: Colors.black12,
+                    )
                   ],
                 );
               },

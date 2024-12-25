@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:csf/ui/pages/CODIGOSQR/generar_qr_view.dart';
-import 'package:csf/ui/pages/CODIGOSQR/pdf_view_qrs.dart';
 import 'package:csf/ui/pages/DASHBOARD/view_stock_modelos.dart';
 import 'package:csf/ui/pages/INGRESOS/view_detalle_registro.dart';
 import 'package:csf/ui/pages/INGRESOS/view_registro_page.dart';
@@ -39,14 +37,14 @@ abstract class AppPages {
     GetPage(
       name: Routes.viewRegister,
       page: () => const ViewRegistrosPage(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 200),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: Routes.viewSalida,
       page: () => const ViewSalidaPage(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 200),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
         name: Routes.updateRegister,
@@ -56,8 +54,8 @@ abstract class AppPages {
     GetPage(
       name: Routes.reparaciones,
       page: () => const ViewReparacionesPage(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 200),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: Routes.observaciones,
@@ -79,16 +77,6 @@ abstract class AppPages {
     GetPage(
         name: Routes.viewStockModelo,
         page: () => ViewStockModeloPage(),
-        transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 200)),
-    GetPage(
-        name: Routes.generarQRs,
-        page: () => const ViewGenerateQRPage(),
-        transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 200)),
-    GetPage(
-        name: Routes.pdfViewQr,
-        page: () => const PdfViewQrPage(),
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 200)),
     GetPage(
