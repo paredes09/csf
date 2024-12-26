@@ -103,7 +103,8 @@ class InventarioController extends GetxController {
       );
       generarReporte.assignAll(incidencias);
       if (incidencias.isNotEmpty) {
-        await Get.toNamed('/viewPDF', arguments: Get.currentRoute);
+        generarReportePDF();
+        //Get.toNamed('/viewPDF', arguments: Get.currentRoute);
       } else {
         Get.snackbar(
             'Error', 'No se encuentan reportes para el mes seleccionado');
@@ -166,8 +167,6 @@ class InventarioController extends GetxController {
     final pdf = pw.Document();
     final fontData = await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
     final ttf = pw.Font.ttf(fontData);
-    final img = await rootBundle.load('assets/jde-logo.webp');
-    final imageBytes = img.buffer.asUint8List();
 
     // Divide la lista en bloques de tamaño fijo, como 40 registros por bloque.
     const registrosPorPagina = 20;
@@ -181,7 +180,6 @@ class InventarioController extends GetxController {
             .toList(),
       );
     }
-
     // Crear una página para cada bloque
     for (var i = 0; i < registrosDivididos.length; i++) {
       pdf.addPage(
@@ -197,30 +195,28 @@ class InventarioController extends GetxController {
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
                         pw.Text(
-                          'Control de Inventario',
+                          'Reporte detallado de ataúdes registrados',
                           style: pw.TextStyle(
                             font: ttf,
-                            fontSize: 24,
+                            fontSize: 22,
                             fontWeight: pw.FontWeight.bold,
                           ),
-                        ),
-                        pw.Container(
-                          alignment: pw.Alignment.center,
-                          height: 50,
-                          child: pw.Image(pw.MemoryImage(imageBytes)),
                         ),
                       ],
                     ),
                   ),
                   pw.Paragraph(
                     text:
-                        'Responsable: ${generarReporte[0].nombreResponsable.toUpperCase()}',
-                    style: pw.TextStyle(font: ttf, fontSize: 18),
+                        'Encargado(a): ${generarReporte[0].nombreResponsable.toUpperCase()}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 16,
+                    ),
                   ),
                   pw.Paragraph(
                     text:
-                        'Fecha: ${DateFormat('dd/MM/yyyy - HH:mm').format(generarReporte[0].fechaRegistro)}',
-                    style: pw.TextStyle(font: ttf, fontSize: 18),
+                        'Fecha y hora de registro: ${DateFormat('dd').format(generarReporte[0].fechaRegistro)} de ${mesController.dropDownValue!.name} del ${DateFormat('yyyy').format(generarReporte[0].fechaRegistro)} ${DateFormat('HH:mm').format(generarReporte[0].fechaRegistro)}',
+                    style: pw.TextStyle(font: ttf, fontSize: 14),
                   ),
                   // ignore: deprecated_member_use
                   pw.Table.fromTextArray(
@@ -251,7 +247,6 @@ class InventarioController extends GetxController {
         ),
       );
     }
-
     final outputFile = await _getOutputFile();
     await outputFile.writeAsBytes(await pdf.save());
     pdfPath.value = outputFile.path;
@@ -262,8 +257,6 @@ class InventarioController extends GetxController {
     final pdf = pw.Document();
     final fontData = await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
     final ttf = pw.Font.ttf(fontData);
-    final img = await rootBundle.load('assets/jde-logo.webp');
-    final imageBytes = img.buffer.asUint8List();
 
     // Filtra los ataúdes en stock y crea la lista ataudesStock
     var ataudesStock = salidaConrtoller.listarAtaudes
@@ -313,11 +306,6 @@ class InventarioController extends GetxController {
                           fontSize: 24,
                           fontWeight: pw.FontWeight.bold,
                         ),
-                      ),
-                      pw.Container(
-                        alignment: pw.Alignment.center,
-                        height: 50,
-                        child: pw.Image(pw.MemoryImage(imageBytes)),
                       ),
                     ],
                   ),

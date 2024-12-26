@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:csf/src/controllers/inventario_controller.dart';
 import 'package:csf/ui/global/components/drow_text.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:printing/printing.dart';
 
 class ReporteInventarioPage extends GetView<InventarioController> {
   const ReporteInventarioPage({super.key});
@@ -46,7 +47,7 @@ class ReporteInventarioPage extends GetView<InventarioController> {
         appBar: AppBar(title: const Text('Generar Reporte Inventario')),
         body: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.all(28.0),
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
           child: Column(
             children: [
               Row(
@@ -83,7 +84,12 @@ class ReporteInventarioPage extends GetView<InventarioController> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(10),
                         onTap: () {
-                          controller.hanfleGenerarReporteD();
+                          if (controller.generarReporte.isEmpty) {
+                            controller.hanfleGenerarReporteD();
+                          } else {
+                            controller.generarReporte.clear();
+                            controller.hanfleGenerarReporteD();
+                          }
                         },
                         child: Ink(
                           height: double.tryParse('70'),
@@ -101,14 +107,41 @@ class ReporteInventarioPage extends GetView<InventarioController> {
               const SizedBox(
                 height: 20,
               ),
-              Flexible(
+              Expanded(
                 child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.grey,
-                  ),
-                ),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ClipRRect(
+                        child: Obx(
+                      () => controller.generarReporte.isNotEmpty
+                          ? PdfPreview(
+                              useActions: true,
+                              allowPrinting: true,
+                              allowSharing: true,
+                              maxPageWidth: 400,
+                              canChangePageFormat: false,
+                              canChangeOrientation: false,
+                              canDebug: false,
+                              previewPageMargin: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 8),
+                              scrollViewDecoration: const BoxDecoration(
+                                color: Colors.transparent,
+                              ),
+                              pdfPreviewPageDecoration: const BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              actionBarTheme: const PdfActionBarTheme(
+                                backgroundColor:
+                                    Color.fromARGB(255, 242, 241, 241),
+                                iconColor: Colors.black54,
+                              ),
+                              build: (format) {
+                                return controller.generarReportePDF();
+                              })
+                          : const SizedBox(),
+                    ))),
               )
             ],
           ),

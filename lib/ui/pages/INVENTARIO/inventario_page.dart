@@ -136,12 +136,14 @@ class InventarioPage extends GetView<InventarioController> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
-            children: [
-              Text(
-                "Responsable:",
-              ),
-            ],
+          elevation: 10,
+          shape:
+              ContinuousRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Responsable:",
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           content: Form(
             key: formatkey,
@@ -170,22 +172,16 @@ class InventarioPage extends GetView<InventarioController> {
                 Get.back();
               },
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: TextButton(
-                child: const Text("Confirmar",
-                    style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  if (formatkey.currentState!.validate()) {
-                    controller.handleGuardarInventario(
-                        controller.responsableController.text);
-                    Get.back();
-                  }
-                },
-              ),
+            SizedBox(
+              height: 40,
+              width: 130,
+              child: globalButton('Confirmar', () {
+                if (formatkey.currentState!.validate()) {
+                  controller.handleGuardarInventario(
+                      controller.responsableController.text);
+                  Get.back();
+                }
+              }),
             )
           ],
         );

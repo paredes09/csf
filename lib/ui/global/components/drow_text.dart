@@ -1,6 +1,5 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 DropDownTextField inputDropDownTextField(
   dynamic initialValue,
