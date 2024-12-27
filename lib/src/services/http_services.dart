@@ -3,11 +3,41 @@
 import 'dart:convert';
 
 import 'package:csf/src/class/control_inventario.dart';
+import 'package:csf/src/class/dashborad.dart';
 import 'package:csf/src/class/list_class.dart';
 import 'package:http/http.dart' as http;
 import 'package:csf/src/class/salida_class.dart';
 
 class HttpServices {
+  Future<List<GraficoVentasMesyAo>> listarVentasPeriodo(int year) async {
+    var url = Uri.parse(
+        'https://www.jardineshelpdesk.somee.com/api/inventarioAtaudes/graficoVentasMesyAño');
+    Map<String, String> queryParams = {'año': year.toString()};
+    var response = await http.get(url.replace(queryParameters: queryParams));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => GraficoVentasMesyAo.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('${response.statusCode}');
+    }
+  }
+
+  Future<List<TablaEstadosClass>> listarTablaEstados() async {
+    var url = Uri.parse(
+        'https://www.jardineshelpdesk.somee.com/api/inventarioAtaudes/tablaEstados?a%C3%B1o=122');
+    var response = await http.get(Uri.parse(url.toString()));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => TablaEstadosClass.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('${response.statusCode}');
+    }
+  }
+
   // endpoint para obtener la lista de modelos de ataud
   Future<List<ModeloClass>> listarModelosAtaudes() async {
     var url = Uri.parse(

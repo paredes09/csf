@@ -1,7 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../src/controllers/home_controller.dart';
 
 Widget barcharHome() {
+  Get.put(HomeController());
+  final control = Get.find<HomeController>();
   return BarChart(
     BarChartData(
       barTouchData: barTouchData,
@@ -11,7 +16,11 @@ Widget barcharHome() {
       gridData: const FlGridData(show: false),
 
       //alignment: BarChartAlignment.spaceAround,
-      maxY: 70,
+      maxY: control.ventasPeriodo
+              .map((e) => e.cantidad)
+              .reduce((value, element) => value > element ? value : element)
+              .toDouble() +
+          10,
     ),
   );
 }
@@ -40,48 +49,50 @@ BarTouchData get barTouchData => BarTouchData(
     );
 
 Widget getTitles(double value, TitleMeta meta) {
+  final control = Get.find<HomeController>();
   const style = TextStyle(
     color: Colors.blue,
     fontWeight: FontWeight.w800,
     fontSize: 10,
   );
   String text;
+
   switch (value.toInt()) {
     case 0:
-      text = 'Ene';
+      text = control.ventasPeriodo[0].mes;
       break;
     case 1:
-      text = 'Feb';
+      text = control.ventasPeriodo[1].mes;
       break;
     case 2:
-      text = 'Mar';
+      text = control.ventasPeriodo[2].mes;
       break;
     case 3:
-      text = 'Abr';
+      text = control.ventasPeriodo[3].mes;
       break;
     case 4:
-      text = 'May';
+      text = control.ventasPeriodo[4].mes;
       break;
     case 5:
-      text = 'Jun';
+      text = control.ventasPeriodo[5].mes;
       break;
     case 6:
-      text = 'Jul';
+      text = control.ventasPeriodo[6].mes;
       break;
     case 7:
-      text = 'Ago';
+      text = control.ventasPeriodo[7].mes;
       break;
     case 8:
-      text = 'Set';
+      text = control.ventasPeriodo[8].mes;
       break;
     case 9:
-      text = 'Oct';
+      text = control.ventasPeriodo[9].mes;
       break;
     case 10:
-      text = 'Nom';
+      text = control.ventasPeriodo[10].mes;
       break;
     case 11:
-      text = 'Dic';
+      text = control.ventasPeriodo[11].mes;
       break;
     default:
       text = '';
@@ -124,125 +135,19 @@ LinearGradient get _barsGradient => const LinearGradient(
       end: Alignment.topCenter,
     );
 
-List<BarChartGroupData> get barGroups => [
-      BarChartGroupData(
-        x: 0,
-        barRods: [
-          BarChartRodData(
-            toY: 28,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 1,
-        barRods: [
-          BarChartRodData(
-            toY: 45,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 2,
-        barRods: [
-          BarChartRodData(
-            toY: 34,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 3,
-        barRods: [
-          BarChartRodData(
-            toY: 27,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 4,
-        barRods: [
-          BarChartRodData(
-            toY: 35,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 5,
-        barRods: [
-          BarChartRodData(
-            toY: 41,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 6,
-        barRods: [
-          BarChartRodData(
-            toY: 16,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 7,
-        barRods: [
-          BarChartRodData(
-            toY: 30,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 8,
-        barRods: [
-          BarChartRodData(
-            toY: 22,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 9,
-        barRods: [
-          BarChartRodData(
-            toY: 50,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 10,
-        barRods: [
-          BarChartRodData(
-            toY: 55,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 11,
-        barRods: [
-          BarChartRodData(
-            toY: 45,
-            gradient: _barsGradient,
-          )
-        ],
-        showingTooltipIndicators: [0],
-      ),
-    ];
+List<BarChartGroupData> get barGroups {
+  final control = Get.find<HomeController>();
+  return List.generate(12, (index) {
+    double cantidad = control.ventasPeriodo[index].cantidad.toDouble();
+    return BarChartGroupData(
+      x: index,
+      barRods: [
+        BarChartRodData(
+          toY: cantidad,
+          gradient: _barsGradient,
+        ),
+      ],
+      showingTooltipIndicators: [0],
+    );
+  });
+}

@@ -4,18 +4,20 @@ import 'package:csf/ui/global/components/gridview_home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:csf/src/controllers/home_controller.dart';
-import 'package:csf/src/controllers/registro_controller.dart';
-import 'package:csf/src/controllers/salida_controller.dart';
 import 'package:csf/ui/global/drawer/drawer.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
   final Color color = Colors.green;
+
   @override
   Widget build(BuildContext context) {
-    final SalidaController scontroller = Get.find<SalidaController>();
-    final RegistroController controllers = Get.find<RegistroController>();
+    // Lista de años disponibles
+    List<int> aos =
+        [for (int i = 2024; i <= DateTime.now().year + 2; i++) i].obs;
+    // Año seleccionado por defecto
+    RxInt aoSeleccionado = DateTime.now().year.obs;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 241, 241),
       appBar: AppBar(
@@ -71,7 +73,7 @@ class HomePage extends GetView<HomeController> {
       ),
       //floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       drawer: const DrawerPage(),
-      body: Obx(() => controllers.isLoading.value
+      body: Obx(() => controller.load.value
           ? const Center(
               child: CircularProgressIndicator(
               backgroundColor: Colors.white,
@@ -104,32 +106,32 @@ class HomePage extends GetView<HomeController> {
                       gridViewHome(() {
                         Get.toNamed('/viewRegister');
                       },
-                          'Stock',
+                          controller.tablaEstados[1].nombreEstado,
                           HugeIcon(
                               icon: HugeIcons.strokeRoundedTaskDaily02,
                               color: Colors.blue.shade600,
                               size: 20.0),
-                          '1000',
+                          controller.tablaEstados[1].cantidad.toString(),
                           'Und Disponibles'),
                       gridViewHome(() {
                         Get.toNamed('/viewSalida');
                       },
-                          'Vendidos',
+                          controller.tablaEstados[0].nombreEstado,
                           HugeIcon(
                               icon: HugeIcons.strokeRoundedTag01,
                               color: Colors.blue.shade600,
                               size: 20.0),
-                          '7500',
+                          controller.tablaEstados[0].cantidad.toString(),
                           'Und Vendidas total'),
                       gridViewHome(() {
                         Get.toNamed('/reparaciones');
                       },
-                          'Reparación',
+                          controller.tablaEstados[2].nombreEstado,
                           HugeIcon(
                               icon: HugeIcons.strokeRoundedRepair,
                               color: Colors.blue.shade600,
                               size: 20.0),
-                          '15',
+                          controller.tablaEstados[2].cantidad.toString(),
                           'Und en Reparación'),
                     ],
                   ),
@@ -144,29 +146,59 @@ class HomePage extends GetView<HomeController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding:
-                                EdgeInsets.only(top: 25, left: 15, right: 15),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 25, left: 15, right: 15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Row(
                                   children: [
-                                    Text('Venta por mes, periodo 2024',
+                                    const Text('Venta por mes, periodo ',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             overflow: TextOverflow.ellipsis)),
-                                    Spacer(),
-                                    Text('Total',
+                                    Obx(() {
+                                      return DropdownButton<int>(
+                                        dropdownColor: Colors.white,
+                                        underline: Container(),
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis),
+                                        value: aoSeleccionado.value,
+                                        onChanged: (int? nuevoAo) {
+                                          aoSeleccionado.value = nuevoAo!;
+                                          controller.handleListarVentasPeriodo(
+                                              aoSeleccionado.value);
+                                        },
+                                        items: aos.map<DropdownMenuItem<int>>(
+                                            (int ao) {
+                                          return DropdownMenuItem<int>(
+                                            value: ao,
+                                            child: Text(ao.toString()),
+                                          );
+                                        }).toList(),
+                                      );
+                                    }),
+                                    const Spacer(),
+                                    const Text('Total',
                                         style: TextStyle(
                                             fontSize: 13, color: Colors.grey))
                                   ],
                                 ),
-                                Text('125',
-                                    style: TextStyle(
+                                Text(
+                                    controller.ventasPeriodo.isEmpty
+                                        ? '0'
+                                        : controller.ventasPeriodo
+                                            .map((venta) => venta.cantidad)
+                                            .reduce((a, b) => a + b)
+                                            .toString(),
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w900))
                               ],
@@ -174,7 +206,23 @@ class HomePage extends GetView<HomeController> {
                           ),
                           AspectRatio(
                             aspectRatio: 1.8,
-                            child: barcharHome(),
+                            child: controller.loading.value
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : controller.ventasPeriodo.isEmpty
+                                    ? const Center(
+                                        child: SizedBox(
+                                          width: 180,
+                                          child: Text(
+                                            textAlign: TextAlign.center,
+                                            'El año seleccionado no tiene ventas registradas',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      )
+                                    : barcharHome(),
                           ),
                         ],
                       ),
