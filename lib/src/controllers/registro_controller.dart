@@ -1,3 +1,4 @@
+import 'package:csf/src/controllers/home_controller.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:csf/src/controllers/salida_controller.dart';
 import 'package:csf/src/services/http_services.dart';
 
 final SalidaController sController = Get.find<SalidaController>();
+final HomeController homeController = Get.find<HomeController>();
 
 class RegistroController extends GetxController {
   int id = 0;
@@ -48,6 +50,7 @@ class RegistroController extends GetxController {
   var isLoading = true.obs;
   var isVisible = false.obs;
   var idObservacion = false.obs;
+  var isLoadingMap = <int, bool>{}.obs;
   void setFechaIngreso(DateTime fecha) {
     fechaIngreso.value = fecha;
     // Asegurar que la fecha de fin no sea menor que la fecha de inicio
@@ -197,7 +200,7 @@ class RegistroController extends GetxController {
 
   Future<void> handleActualizarObservacion(
       int id, String detalles, bool estado) async {
-    isLoading.value = true;
+    isLoadingMap[id] = true;
     try {
       int respuesta =
           await httpServices.actualizarObservacion(id, detalles, estado);
@@ -217,6 +220,7 @@ class RegistroController extends GetxController {
       Get.snackbar('Error', 'Error al registrar la observación $e');
     } finally {
       isLoading.value = false;
+      isLoadingMap[id] = false;
     }
   }
 
@@ -302,6 +306,7 @@ class RegistroController extends GetxController {
               : observacionesController.text);
 
       if (respuesta == 1) {
+        await homeController.handleListarVentasPeriodo(DateTime.now().year);
         await sController.handlelistarRegistros();
         Get.offAndToNamed('/home');
         modeloController.clearDropDown();

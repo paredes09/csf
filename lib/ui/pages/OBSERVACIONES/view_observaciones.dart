@@ -91,8 +91,8 @@ class ViewObservacionesPage extends GetView<RegistroController> {
                   color: Colors.white))
         ],
       ),
-      body: Obx(() => controller.isLoading.value
-          ? const Center(child: CircularProgressIndicator())
+      body: Obx(() => controller.listarObservaciones.isEmpty
+          ? const Center(child: Text('No tienes observaciones registradas'))
           : ListView.builder(
               itemCount: controller.listarObservaciones.length,
               itemBuilder: (context, index) {
@@ -107,15 +107,23 @@ class ViewObservacionesPage extends GetView<RegistroController> {
                           fontSize: 12.5,
                         ),
                       ),
-                      trailing: Obx(() => Checkbox(
-                          activeColor: Colors.blue,
-                          value: observacion.estado.obs.value,
-                          onChanged: (bool? value) {
-                            controller.handleActualizarObservacion(
-                                observacion.id,
-                                observacion.detalles,
-                                observacion.estado.obs.value = value!);
-                          })),
+                      trailing: Obx(() {
+                        bool isLoading =
+                            controller.isLoadingMap[observacion.id] ?? false;
+                        return isLoading
+                            ? const CircularProgressIndicator(
+                                strokeWidth: 3, 
+                              )
+                            : Checkbox(
+                                activeColor: Colors.blue,
+                                value: observacion.estado.obs.value,
+                                onChanged: (bool? value) {
+                                  controller.handleActualizarObservacion(
+                                      observacion.id,
+                                      observacion.detalles,
+                                      observacion.estado.obs.value = value!);
+                                });
+                      }),
                       onTap: () {
                         controller.observController.text = observacion.detalles;
                         showModalBottomSheet<void>(

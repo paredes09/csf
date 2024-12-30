@@ -1,9 +1,12 @@
+import 'package:csf/src/controllers/home_controller.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:csf/src/class/salida_class.dart';
 import 'package:csf/src/services/http_services.dart';
+
+final HomeController homeController = Get.find<HomeController>();
 
 class SalidaController extends GetxController {
   final isVisible = false.obs;
@@ -83,6 +86,7 @@ class SalidaController extends GetxController {
           observacionesController.text);
 
       if (respuesta == 1) {
+        await homeController.handleListarVentasPeriodo(DateTime.now().year);
         await handlelistarRegistros();
         Get.offAndToNamed('/home');
         codigoController.clearDropDown();

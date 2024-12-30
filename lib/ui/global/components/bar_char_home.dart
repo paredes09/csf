@@ -55,54 +55,61 @@ Widget getTitles(double value, TitleMeta meta) {
     fontWeight: FontWeight.w800,
     fontSize: 10,
   );
-  String text;
-
-  switch (value.toInt()) {
-    case 0:
-      text = control.ventasPeriodo[0].mes;
-      break;
-    case 1:
-      text = control.ventasPeriodo[1].mes;
-      break;
-    case 2:
-      text = control.ventasPeriodo[2].mes;
-      break;
-    case 3:
-      text = control.ventasPeriodo[3].mes;
-      break;
-    case 4:
-      text = control.ventasPeriodo[4].mes;
-      break;
-    case 5:
-      text = control.ventasPeriodo[5].mes;
-      break;
-    case 6:
-      text = control.ventasPeriodo[6].mes;
-      break;
-    case 7:
-      text = control.ventasPeriodo[7].mes;
-      break;
-    case 8:
-      text = control.ventasPeriodo[8].mes;
-      break;
-    case 9:
-      text = control.ventasPeriodo[9].mes;
-      break;
-    case 10:
-      text = control.ventasPeriodo[10].mes;
-      break;
-    case 11:
-      text = control.ventasPeriodo[11].mes;
-      break;
-    default:
-      text = '';
-      break;
+  const defaultMonths = [
+    'ENE',
+    'FEB',
+    'MAR',
+    'ABR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AGO',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DIC'
+  ];
+  int index = value.toInt();
+  if (index < 0 || index >= defaultMonths.length) {
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 5,
+      child: const Text('', style: style),
+    );
+  }
+  String text =
+      defaultMonths[index]; // Por defecto asignamos el mes de defaultMonths
+  for (var venta in control.ventasPeriodo) {
+    if (_getMonthIndex(venta.mes) == index) {
+      text = venta.mes; // Si el índice coincide, asignamos el mes del control
+      break; // Salimos del bucle
+    }
   }
   return SideTitleWidget(
     axisSide: meta.axisSide,
     space: 5,
     child: Text(text, style: style),
   );
+}
+
+int? _getMonthIndex(String mes) {
+  const monthNames = [
+    'ENE',
+    'FEB',
+    'MAR',
+    'ABR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AGO',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DIC'
+  ];
+
+  final lowerMes = mes.toLowerCase();
+  return monthNames.contains(lowerMes) ? monthNames.indexOf(lowerMes) : null;
 }
 
 FlTitlesData get titlesData => const FlTitlesData(
@@ -137,8 +144,34 @@ LinearGradient get _barsGradient => const LinearGradient(
 
 List<BarChartGroupData> get barGroups {
   final control = Get.find<HomeController>();
+  // Lista de meses en orden
+  const defaultMonths = [
+    'ENE',
+    'FEB',
+    'MAR',
+    'ABR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AGO',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DIC'
+  ];
+
+  // Crear un mapa para organizar las cantidades por mes
+  final monthData = {for (var mes in defaultMonths) mes: 0.0};
+  // Rellenar el mapa con los datos disponibles en ventasPeriodo
+  for (var venta in control.ventasPeriodo) {
+    if (monthData.containsKey(venta.mes)) {
+      monthData[venta.mes] = venta.cantidad.toDouble();
+    }
+  }
+  // Generar las barras en el orden correcto de los meses
   return List.generate(12, (index) {
-    double cantidad = control.ventasPeriodo[index].cantidad.toDouble();
+    final mes = defaultMonths[index];
+    final cantidad = monthData[mes] ?? 0.0;
     return BarChartGroupData(
       x: index,
       barRods: [
